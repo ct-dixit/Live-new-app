@@ -7,6 +7,10 @@ const News = (props) => {
   const [page, setPage] = useState(1);
   const [totalResults, setTotalResults] = useState(0);
 
+  const capitalizeFirstLatter = (string) => {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+
   useEffect(() => {
     const fetchNews = async () => {
       let url = `https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=160b435514254bb28c355f4814de1b80&page=1&pageSize=${props.pageSizes}`;
@@ -16,6 +20,7 @@ const News = (props) => {
       setArticle(parsedData.articles);
       setTotalResults(parsedData.totalResults);
       setLoading(false);
+      document.title = `${capitalizeFirstLatter(props.category)} - News Live App`
     };
 
     fetchNews(); // Call fetchNews function inside the useEffect
@@ -48,7 +53,7 @@ const News = (props) => {
   return (
     <div className="container my-3">
       <h1 className="text-center" style={{ margin: '35px 0px' }}>
-        New App - Top HeadLines
+        New App - Top {capitalizeFirstLatter(props.category)} HeadLines
       </h1>
       {loading}
 
