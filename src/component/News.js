@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import NewsItem from './NewsItem';
-// import Spinner from './Spinner';
 
 const News = (props) => {
   const [loading, setLoading] = useState(false);
@@ -22,31 +21,27 @@ const News = (props) => {
     fetchNews(); // Call fetchNews function inside the useEffect
   }, [props.country, props.category, props.pageSizes]);
 
-  const handlePrevClick = async () => {
+  const commonUse = async () => {
     let data = await fetch(
       `https://newsapi.org/v2/top-headlines?country=${props.country}&category=${
         props.category
-      }&apiKey=160b435514254bb28c355f4814de1b80&page=${page - 1}&pageSize=${props.pageSizes}`
+      }&apiKey=160b435514254bb28c355f4814de1b80&page=${page}&pageSize=${props.pageSizes}`
     );
     setLoading(true);
     let parsedData = await data.json();
-    setPage(page - 1);
     setArticle(parsedData.articles);
     setLoading(false);
+  }
+
+  const handlePrevClick = async () => {
+    commonUse();
+    setPage(page - 1);
   };
 
   const handleNextClick = async () => {
     if (!(page + 1 > Math.ceil(totalResults / props.pageSizes))) {
-      let data = await fetch(
-        `https://newsapi.org/v2/top-headlines?country=${props.country}&category=${
-          props.category
-        }&apiKey=160b435514254bb28c355f4814de1b80&page=${page + 1}&pageSize=${props.pageSizes}`
-      );
-      setLoading(true);
-      let parsedData = await data.json();
+      commonUse();
       setPage(page + 1);
-      setArticle(parsedData.articles);
-      setLoading(false);
     }
   };
 
