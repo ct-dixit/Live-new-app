@@ -13,43 +13,25 @@ const News = (props) => {
 
   useEffect(() => {
     const fetchNews = async () => {
-      let url = `https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=160b435514254bb28c355f4814de1b80&page=1&pageSize=${props.pageSizes}`;
+      props.setProgress('10')
+      let url = `https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=${props.apiKey}&page=1&pageSize=${props.pageSizes}`;
 
       let data = await fetch(url);
       let parsedData = await data.json();
       setArticle(parsedData.articles);
       setTotalResults(parsedData.totalResults);
-
       document.title = `${capitalizeFirstLatter(props.category)} - News Live App`;
+      props.setProgress('100')
     };
 
     fetchNews(); // Call fetchNews function inside the useEffect
-  }, [props.country, props.category, props.pageSizes]);
+  }, [props.country, props.category, props.pageSizes, props.setProgress]);
 
-  // const commonUse = async () => {
-  //   let data = await fetch(
-  //     `https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=160b435514254bb28c355f4814de1b80&page=${page}&pageSize=${props.pageSizes}`
-  //   );
-  //   let parsedData = await data.json();
-  //   setArticle(parsedData.articles);
-  // };
-
-  // const handlePrevClick = async () => {
-  //   commonUse();
-  //   setPage(page - 1);
-  // };
-
-  // const handleNextClick = async () => {
-  //   if (!(page + 1 > Math.ceil(totalResults / props.pageSizes))) {
-  //     commonUse();
-  //     setPage(page + 1);
-  //   }
-  // };
-
+  
 
   const fetchMoreData = async () => {
     let data = await fetch(
-      `https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=160b435514254bb28c355f4814de1b80&page=${page}&pageSize=${props.pageSizes}`
+      `https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=${props.apiKey}&page=${page}&pageSize=${props.pageSizes}`
     );
     let parsedData = await data.json();
     setArticle(article.concat(parsedData.articles));
@@ -58,7 +40,7 @@ const News = (props) => {
 
   return (
     <>
-    {/* // <div className="container my-3"> */}
+      {/* // <div className="container my-3"> */}
       <h1 className="text-center" style={{ margin: '35px 0px' }}>
         New App - Top {capitalizeFirstLatter(props.category)} HeadLines
       </h1>
@@ -69,23 +51,23 @@ const News = (props) => {
         loader={<h4>Loading...</h4>}
       >
         <div className="container">
-        <div className="row">
-          {article.map((element) => {
-            return (
-              <div className="col-md-4 mb-3" key={element.url}>
-                <NewsItem
-                  title={element.title ? element.title.slice(0, 45) : ''}
-                  description={element.description ? element.description.slice(0, 88) : ''}
-                  imagesUrl={element.urlToImage}
-                  newsUrl={element.url}
-                  author={element.author}
-                  date={element.publishedAt}
-                />
-              </div>
-            );
-          })}
+          <div className="row">
+            {article.map((element) => {
+              return (
+                <div className="col-md-4 mb-3" key={element.url}>
+                  <NewsItem
+                    title={element.title ? element.title.slice(0, 45) : ''}
+                    description={element.description ? element.description.slice(0, 88) : ''}
+                    imagesUrl={element.urlToImage}
+                    newsUrl={element.url}
+                    author={element.author}
+                    date={element.publishedAt}
+                  />
+                </div>
+              );
+            })}
           </div>
-          </div>
+        </div>
       </InfiniteScroll>
       {/* <div className="container d-flex justify-content-between">
         <button disabled={page <= 1} type="button" className="btn btn-primary" onClick={handlePrevClick}>
@@ -100,8 +82,8 @@ const News = (props) => {
           Next
         </button>
       </div> */}
-        {/* </div> */}
-        </>
+      {/* </div> */}
+    </>
   );
 };
 
