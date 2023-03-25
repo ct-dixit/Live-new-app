@@ -15,7 +15,6 @@ const News = (props) => {
     const fetchNews = async () => {
       props.setProgress('10')
       let url = `https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=${props.apiKey}&page=1&pageSize=${props.pageSizes}`;
-
       let data = await fetch(url);
       let parsedData = await data.json();
       setArticle(parsedData.articles);
@@ -24,14 +23,15 @@ const News = (props) => {
       props.setProgress('100')
     };
 
+    // eslint-disable-next-line
     fetchNews(); // Call fetchNews function inside the useEffect
-  }, [props.country, props.category, props.pageSizes, props.setProgress]);
+  }, []);
 
   
 
   const fetchMoreData = async () => {
     let data = await fetch(
-      `https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=${props.apiKey}&page=${page}&pageSize=${props.pageSizes}`
+      `https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=${props.apiKey}&page=${page+1}&pageSize=${props.pageSizes}`
     );
     let parsedData = await data.json();
     setArticle(article.concat(parsedData.articles));
@@ -40,7 +40,6 @@ const News = (props) => {
 
   return (
     <>
-      {/* // <div className="container my-3"> */}
       <h1 className="text-center" style={{ margin: '35px 0px' }}>
         New App - Top {capitalizeFirstLatter(props.category)} HeadLines
       </h1>
@@ -69,20 +68,7 @@ const News = (props) => {
           </div>
         </div>
       </InfiniteScroll>
-      {/* <div className="container d-flex justify-content-between">
-        <button disabled={page <= 1} type="button" className="btn btn-primary" onClick={handlePrevClick}>
-          Previous
-        </button>
-        <button
-          disabled={page + 1 > Math.ceil(totalResults / props.pageSizes)}
-          type="button"
-          className="btn btn-primary"
-          onClick={handleNextClick}
-        >
-          Next
-        </button>
-      </div> */}
-      {/* </div> */}
+      
     </>
   );
 };
